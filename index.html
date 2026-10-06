@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Exercice de la molette - Le plongeur</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:24px;font-family:Arial,Helvetica,sans-serif;background:#f5f6f8;color:#222}
+.wrap{max-width:900px;margin:auto}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:22px;margin:0 0 7px}
+p{margin:0;color:#666}
+button{padding:10px 16px;border:1px solid #ccd1d7;border-radius:9px;background:#fff;cursor:pointer;font-size:14px}
+.window{height:500px;overflow-y:auto;overscroll-behavior:contain;border:1px solid #d7dce2;border-radius:14px;background:#fff;position:relative}
+.sea{height:1500px;position:relative;overflow:hidden;background:linear-gradient(#c9f7f4 0%,#88dbe8 18%,#50b3d0 38%,#2c87ab 58%,#176181 78%,#0b3c57 100%)}
+.wave{position:absolute;top:34px;left:0;right:0;height:7px;background:rgba(255,255,255,.82)}
+.diver{position:absolute;top:80px;left:50%;transform:translateX(-50%);width:90px;height:145px;z-index:10;transition:top .06s linear}
+.diver svg{width:100%;height:100%;display:block}
+.fish{position:absolute;font-size:40px}
+.a{top:350px;left:16%}.b{top:530px;right:15%}.c{top:720px;left:25%}.d{top:900px;right:22%}.e{top:1080px;left:15%}
+.bubble{position:absolute;color:#fff;font-size:23px;opacity:.7}
+.q1{top:310px;left:37%}.q2{top:610px;right:32%}.q3{top:850px;left:33%}
+.floor{position:absolute;bottom:0;left:0;right:0;height:145px;background:#b99d70;border-radius:50% 50% 0 0/30% 30% 0 0}
+.chest{position:absolute;top:1280px;left:50%;transform:translateX(-50%);font-size:85px;z-index:5}
+.label{position:absolute;top:1380px;left:0;right:0;text-align:center;color:#fff;font-weight:700;font-size:18px;z-index:6}
+.progress{margin-top:10px;height:8px;border-radius:999px;background:#d7dce2;overflow:hidden}
+.bar{height:100%;width:0;background:#2563eb;transition:width .06s linear}
+.help{text-align:center;margin-top:10px;font-size:14px;color:#666}
+.win{margin-top:14px;padding:18px;border-radius:12px;background:#e8f0ff;text-align:center;font-size:21px;font-weight:700}
+.hidden{display:none}
+@media(max-width:600px){body{padding:12px}.window{height:430px}.diver{width:78px;height:130px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top">
+  <div>
+   <h1>Descends la molette vers le bas pour trouver le trésor</h1>
+   <p>Fais rouler la molette vers le bas pour faire descendre le plongeur.</p>
+  </div>
+  <button id="reset" type="button">Recommencer</button>
+ </div>
+
+ <div id="window" class="window" tabindex="0" aria-label="Utilise la molette pour faire descendre le plongeur">
+  <div class="sea">
+   <div class="wave"></div>
+   <div id="diver" class="diver" aria-label="Plongeur entier">
+    <svg viewBox="0 0 100 170" role="img" aria-label="Plongeur avec combinaison, bouteille et palmes">
+     <ellipse cx="50" cy="25" rx="19" ry="21" fill="#e0b18a" stroke="#17212b" stroke-width="3"/>
+     <rect x="34" y="17" width="32" height="15" rx="5" fill="#9de8f2" stroke="#17212b" stroke-width="3"/>
+     <line x1="66" y1="23" x2="78" y2="18" stroke="#17212b" stroke-width="4"/>
+     <rect x="27" y="48" width="18" height="57" rx="8" fill="#9aa5ad" stroke="#17212b" stroke-width="3"/>
+     <rect x="38" y="43" width="28" height="65" rx="12" fill="#222b35" stroke="#17212b" stroke-width="3"/>
+     <line x1="40" y1="59" x2="18" y2="88" stroke="#222b35" stroke-width="12" stroke-linecap="round"/>
+     <line x1="63" y1="59" x2="83" y2="88" stroke="#222b35" stroke-width="12" stroke-linecap="round"/>
+     <circle cx="16" cy="91" r="7" fill="#e0b18a"/><circle cx="85" cy="91" r="7" fill="#e0b18a"/>
+     <line x1="46" y1="102" x2="36" y2="139" stroke="#222b35" stroke-width="13" stroke-linecap="round"/>
+     <line x1="59" y1="102" x2="68" y2="139" stroke="#222b35" stroke-width="13" stroke-linecap="round"/>
+     <path d="M37 136 L17 151 L41 153 Z" fill="#343f49" stroke="#17212b" stroke-width="3"/>
+     <path d="M67 136 L88 151 L63 153 Z" fill="#343f49" stroke="#17212b" stroke-width="3"/>
+     <circle cx="80" cy="13" r="4" fill="white" opacity=".9"/><circle cx="88" cy="4" r="3" fill="white" opacity=".8"/>
+    </svg>
+   </div>
+   <span class="fish a">🐟</span><span class="fish b">🐠</span><span class="fish c">🐡</span><span class="fish d">🪼</span><span class="fish e">🐙</span>
+   <span class="bubble q1">○ ○</span><span class="bubble q2">○</span><span class="bubble q3">○ ○</span>
+   <div class="chest">🧰</div>
+   <div class="label">Le trésor est ici !</div>
+   <div class="floor"></div>
+  </div>
+ </div>
+
+ <div class="progress"><div id="bar" class="bar"></div></div>
+ <div id="help" class="help">↓ Tourne la molette vers le bas pour faire descendre le plongeur</div>
+ <div id="win" class="win hidden" aria-live="polite">🎉 Bravo ! Tu as trouvé le trésor !</div>
+</div>
+
+<script>
+const box=document.getElementById("window");
+const diver=document.getElementById("diver");
+const bar=document.getElementById("bar");
+const win=document.getElementById("win");
+const help=document.getElementById("help");
+let won=false;
+
+function update(){
+ const max=Math.max(1,box.scrollHeight-box.clientHeight);
+ const p=Math.max(0,Math.min(1,box.scrollTop/max));
+ bar.style.width=(p*100)+"%";
+ diver.style.top=(80+p*1140)+"px";
+ if(p>.94&&!won){
+  won=true;
+  win.classList.remove("hidden");
+  help.textContent="✓ Trésor découvert !";
+ }
+}
+box.addEventListener("scroll",update,{passive:true});
+document.getElementById("reset").addEventListener("click",()=>{
+ won=false;
+ box.scrollTop=0;
+ bar.style.width="0%";
+ diver.style.top="80px";
+ win.classList.add("hidden");
+ help.textContent="↓ Tourne la molette vers le bas pour faire descendre le plongeur";
+ box.focus();
+});
+update();
+</script>
+</body>
+</html>
